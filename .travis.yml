@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "6.10.2"
+deploy:
+  provider: script
+  script: npm install -g serverless && serverless deploy -v
+  skip_cleanup: true
+cache:
+  directories:
+    - "node_modules"
