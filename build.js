@@ -14,39 +14,35 @@ const files = [
 ]
 
 module.exports.build = (event, context, callback) => {
-  mkdirp(path.resolve(__dirname, 'tmp'), () => {
-    copyAll(files)
-      .then(() => {
-        exec(
-          `cd tmp && ./node_modules/.bin/gatsby build`,
-          (err, stdout, stderr) => {
-            if (err instanceof Error) {
-              console.error(err)
+  // mkdirp(path.resolve(__dirname, 'tmp'), () => {
+  copyAll(files)
+    .then(() => {
+      exec(
+        `cd /tmp && ./node_modules/.bin/gatsby build`,
+        (err, stdout, stderr) => {
+          if (err instanceof Error) {
+            console.error(err)
 
-              throw err
-            }
-
-            console.log('stdout ', stdout)
-            console.log('stderr ', stderr)
-
-            callback(null, 'done')
+            throw err
           }
-        )
-      })
-      .catch(err => console.log(err))
-  })
+
+          console.log('stdout ', stdout)
+          console.log('stderr ', stderr)
+
+          callback(null, 'done')
+        }
+      )
+    })
+    .catch(err => console.log(err))
+  // })
 }
 
 function copy(file) {
   return new Promise((resolve, reject) => {
-    ncp(
-      path.resolve(__dirname, file),
-      path.resolve(__dirname, `tmp/${file}`),
-      err => {
-        if (err) return reject(err)
-        resolve()
-      }
-    )
+    ncp(path.resolve(__dirname, file), `/tmp/${file}`, err => {
+      if (err) return reject(err)
+      resolve()
+    })
   })
 }
 
