@@ -21,9 +21,8 @@ module.exports.build = (event, context, callback) => {
         `cd /tmp && ./node_modules/.bin/gatsby build`,
         (err, stdout, stderr) => {
           if (err instanceof Error) {
-            console.error(err)
-
-            throw err
+            callback(err)
+            return
           }
 
           console.log('stdout ', stdout)
@@ -33,7 +32,7 @@ module.exports.build = (event, context, callback) => {
         }
       )
     })
-    .catch(err => console.log(err))
+    .catch(err => callback(err))
   // })
 }
 
