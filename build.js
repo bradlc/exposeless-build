@@ -1,4 +1,4 @@
-const exec = require('child_process').exec
+const spawn = require('child_process').spawn
 const path = require('path')
 const ncp = require('ncp')
 const mkdirp = require('mkdirp')
@@ -19,23 +19,39 @@ module.exports.build = (event, context, callback) => {
     copyAll(files)
       .then(() => {
         console.log('copied files')
-        exec(
-          `cd /tmp/gatsby-build && ./node_modules/.bin/gatsby build`,
-          (err, stdout, stderr) => {
-            console.log('hi')
-            if (err instanceof Error) {
-              callback(err)
-              return
-            }
+        const build = spawn('./node_modules/.bin/gatsby', ['build'], {
+          cwd: '/tmp/gatsby-build',
+        })
 
-            console.log('wat')
+        build.stdout.on('data', data => {
+          console.log(`stdout: ${data}`)
+        })
 
-            console.log('stdout ', stdout)
-            console.log('stderr ', stderr)
+        build.stderr.on('data', data => {
+          console.log(`stderr: ${data}`)
+        })
 
-            callback(null, 'done')
-          }
-        )
+        build.on('close', code => {
+          console.log(`child process exited with code ${code}`)
+          callback(null, 'done')
+        })
+        // exec(
+        //   `cd /tmp/gatsby-build && ./node_modules/.bin/gatsby build`,
+        //   (err, stdout, stderr) => {
+        //     console.log('hi')
+        //     if (err instanceof Error) {
+        //       callback(err)
+        //       return
+        //     }
+
+        //     console.log('wat')
+
+        //     console.log('stdout ', stdout)
+        //     console.log('stderr ', stderr)
+
+        //     callback(null, 'done')
+        //   }
+        // )
       })
       .catch(err => callback(err))
   })
