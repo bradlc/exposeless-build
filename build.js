@@ -15,15 +15,20 @@ const files = [
 
 module.exports.build = (event, context, callback) => {
   mkdirp('/tmp/gatsby-build', () => {
+    console.log('made dir')
     copyAll(files)
       .then(() => {
+        console.log('copied files')
         exec(
           `cd /tmp/gatsby-build && ./node_modules/.bin/gatsby build`,
           (err, stdout, stderr) => {
+            console.log('hi')
             if (err instanceof Error) {
               callback(err)
               return
             }
+
+            console.log('wat')
 
             console.log('stdout ', stdout)
             console.log('stderr ', stderr)
