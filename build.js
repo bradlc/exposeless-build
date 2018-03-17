@@ -22,9 +22,13 @@ module.exports.build = (event, context, callback) => {
         console.log('copied files')
         execSync('ln -s ./node_modules /tmp/gatsby-build/node_modules')
         console.log('created symlink')
-        const build = spawn('./node_modules/.bin/gatsby', ['build'], {
-          cwd: '/tmp/gatsby-build',
-        })
+        const build = spawn(
+          path.resolve(__dirname, 'node_modules/.bin/gatsby'),
+          ['build'],
+          {
+            cwd: '/tmp/gatsby-build',
+          }
+        )
 
         build.stdout.on('data', data => {
           console.log(`stdout: ${data}`)
