@@ -20,6 +20,12 @@ module.exports.build = (event, context, callback) => {
     copyAll(files)
       .then(() => {
         console.log('copied files')
+        execSync(
+          `mkdir /tmp/gatsby-build/public && ln -s /tmp/gatsby-build/public ${path.resolve(
+            __dirname,
+            'public'
+          )}`
+        )
         execSync('ln -s ./node_modules /tmp/gatsby-build/node_modules')
         console.log('created symlink')
         const build = spawn(
