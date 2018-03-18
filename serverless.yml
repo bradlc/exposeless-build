@@ -12,3 +12,8 @@ provider:
 functions:
   build:
     handler: build.build
+
+package: # Optional deployment packaging configuration
+  include: # Specify the directories and files which should be included in the deployment package
+    - .cache
+    - public

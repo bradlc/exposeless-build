@@ -14,46 +14,46 @@ const files = [
 ]
 
 module.exports.build = (event, context, callback) => {
-  mkdirp('/tmp/gatsby-build', () => {
-    console.log('made dir')
-    copyAll(files)
-      .then(() => {
-        console.log('copied files')
-        const build = spawn('./node_modules/.bin/gatsby', ['build'], {
-          cwd: '/tmp/gatsby-build',
-        })
+  mkdirp('/tmp/gatsby-build/public', () => {
+    mkdirp('/tmp/gatsby-build/.cache', () => {
+      console.log('made dir')
+      // copyAll(files)
+      //   .then(() => {
+      // console.log('copied files')
+      const build = spawn('./node_modules/.bin/gatsby', ['build'])
 
-        build.stdout.on('data', data => {
-          console.log(`stdout: ${data}`)
-        })
-
-        build.stderr.on('data', data => {
-          console.log(`stderr: ${data}`)
-        })
-
-        build.on('close', code => {
-          console.log(`child process exited with code ${code}`)
-          callback(null, 'done')
-        })
-        // exec(
-        //   `cd /tmp/gatsby-build && ./node_modules/.bin/gatsby build`,
-        //   (err, stdout, stderr) => {
-        //     console.log('hi')
-        //     if (err instanceof Error) {
-        //       callback(err)
-        //       return
-        //     }
-
-        //     console.log('wat')
-
-        //     console.log('stdout ', stdout)
-        //     console.log('stderr ', stderr)
-
-        //     callback(null, 'done')
-        //   }
-        // )
+      build.stdout.on('data', data => {
+        console.log(`stdout: ${data}`)
       })
-      .catch(err => callback(err))
+
+      build.stderr.on('data', data => {
+        console.log(`stderr: ${data}`)
+      })
+
+      build.on('close', code => {
+        console.log(`child process exited with code ${code}`)
+        callback(null, 'done')
+      })
+      // exec(
+      //   `cd /tmp/gatsby-build && ./node_modules/.bin/gatsby build`,
+      //   (err, stdout, stderr) => {
+      //     console.log('hi')
+      //     if (err instanceof Error) {
+      //       callback(err)
+      //       return
+      //     }
+
+      //     console.log('wat')
+
+      //     console.log('stdout ', stdout)
+      //     console.log('stderr ', stderr)
+
+      //     callback(null, 'done')
+      //   }
+      // )
+      // })
+      // .catch(err => callback(err))
+    })
   })
 }
 
