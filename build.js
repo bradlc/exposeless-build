@@ -1,12 +1,11 @@
 const spawn = require('child_process').spawn
-const execSync = require('child_process').execSync
 const path = require('path')
 const ncp = require('ncp')
 const mkdirp = require('mkdirp')
 
 const files = [
   'src',
-  // 'node_modules',
+  'node_modules',
   'gatsby-browser.js',
   'gatsby-config.js',
   'gatsby-node.js',
@@ -20,21 +19,9 @@ module.exports.build = (event, context, callback) => {
     copyAll(files)
       .then(() => {
         console.log('copied files')
-        execSync(
-          `mkdir /tmp/gatsby-build/public && ln -s /tmp/gatsby-build/public ${path.resolve(
-            __dirname,
-            'public'
-          )}`
-        )
-        execSync('ln -s ./node_modules /tmp/gatsby-build/node_modules')
-        console.log('created symlink')
-        const build = spawn(
-          path.resolve(__dirname, 'node_modules/.bin/gatsby'),
-          ['build'],
-          {
-            cwd: '/tmp/gatsby-build',
-          }
-        )
+        const build = spawn('./node_modules/.bin/gatsby', ['build'], {
+          cwd: '/tmp/gatsby-build',
+        })
 
         build.stdout.on('data', data => {
           console.log(`stdout: ${data}`)
