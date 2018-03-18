@@ -19,7 +19,7 @@
     "develop": "gatsby develop",
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\"",
-    "postinstall": "zip -r9 all.zip * && zip -r9 pkg.zip all.zip build.js"
+    "postinstall": "zip -qr9 all.zip * && zip -qr9 pkg.zip all.zip build.js"
   },
   "devDependencies": {
     "prettier": "^1.11.1"
