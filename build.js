@@ -1,4 +1,5 @@
 const spawn = require('child_process').spawn
+const execSync = require('child_process').execSync
 const path = require('path')
 const ncp = require('ncp')
 const mkdirp = require('mkdirp')
@@ -14,6 +15,31 @@ const files = [
 ]
 
 module.exports.build = (event, context, callback) => {
+  mkdirp('/tmp/gatsby-build', () => {
+    copy('all.zip').then(() => {
+      execSync('unzip all.zip', { cwd: '/tmp/gatsby-build' })
+
+      const build = spawn('./node_modules/.bin/gatsby', ['build'], {
+        cwd: '/tmp/gatsby-build',
+      })
+
+      build.stdout.on('data', data => {
+        console.log(`stdout: ${data}`)
+      })
+
+      build.stderr.on('data', data => {
+        console.log(`stderr: ${data}`)
+      })
+
+      build.on('close', code => {
+        console.log(`child process exited with code ${code}`)
+        callback(null, 'done')
+      })
+    })
+  })
+}
+
+module.exports.lol = (event, context, callback) => {
   mkdirp('/tmp/gatsby-build/public', () => {
     mkdirp('/tmp/gatsby-build/.cache', () => {
       console.log('made dir')

@@ -12,3 +12,6 @@ provider:
 functions:
   build:
     handler: build.build
+
+package:
+  artifact: pkg.zip
