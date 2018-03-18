@@ -17,8 +17,9 @@ const files = [
 module.exports.build = (event, context, callback) => {
   // mkdirp('/tmp/gatsby-build', () => {
   //   copy('all.zip').then(() => {
-  execSync('mkdir /tmp/gatsby-build')
-  execSync('cp all.zip /tmp/gatsby-build/all.zip')
+  execSync(
+    'rm -rf /tmp/gatsby-build && mkdir /tmp/gatsby-build && cp all.zip /tmp/gatsby-build/all.zip'
+  )
   execSync('unzip all.zip', { cwd: '/tmp/gatsby-build' })
 
   const build = spawn('./node_modules/.bin/gatsby', ['build'], {
