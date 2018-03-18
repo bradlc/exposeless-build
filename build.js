@@ -1,8 +1,8 @@
 const spawn = require('child_process').spawn
 const execSync = require('child_process').execSync
 const path = require('path')
-const ncp = require('ncp')
-const mkdirp = require('mkdirp')
+// const ncp = require('ncp')
+// const mkdirp = require('mkdirp')
 
 const files = [
   'src',
@@ -15,28 +15,30 @@ const files = [
 ]
 
 module.exports.build = (event, context, callback) => {
-  mkdirp('/tmp/gatsby-build', () => {
-    copy('all.zip').then(() => {
-      execSync('unzip all.zip', { cwd: '/tmp/gatsby-build' })
+  // mkdirp('/tmp/gatsby-build', () => {
+  //   copy('all.zip').then(() => {
+  execSync('mkdir /tmp/gatsby-build')
+  execSync('mv all.zip /tmp/gatsby-build/all.zip')
+  execSync('unzip all.zip', { cwd: '/tmp/gatsby-build' })
 
-      const build = spawn('./node_modules/.bin/gatsby', ['build'], {
-        cwd: '/tmp/gatsby-build',
-      })
-
-      build.stdout.on('data', data => {
-        console.log(`stdout: ${data}`)
-      })
-
-      build.stderr.on('data', data => {
-        console.log(`stderr: ${data}`)
-      })
-
-      build.on('close', code => {
-        console.log(`child process exited with code ${code}`)
-        callback(null, 'done')
-      })
-    })
+  const build = spawn('./node_modules/.bin/gatsby', ['build'], {
+    cwd: '/tmp/gatsby-build',
   })
+
+  build.stdout.on('data', data => {
+    console.log(`stdout: ${data}`)
+  })
+
+  build.stderr.on('data', data => {
+    console.log(`stderr: ${data}`)
+  })
+
+  build.on('close', code => {
+    console.log(`child process exited with code ${code}`)
+    callback(null, 'done')
+  })
+  //   })
+  // })
 }
 
 module.exports.lol = (event, context, callback) => {
@@ -83,15 +85,15 @@ module.exports.lol = (event, context, callback) => {
   })
 }
 
-function copy(file) {
-  return new Promise((resolve, reject) => {
-    ncp(path.resolve(__dirname, file), `/tmp/gatsby-build/${file}`, err => {
-      if (err) return reject(err)
-      resolve()
-    })
-  })
-}
+// function copy(file) {
+//   return new Promise((resolve, reject) => {
+//     ncp(path.resolve(__dirname, file), `/tmp/gatsby-build/${file}`, err => {
+//       if (err) return reject(err)
+//       resolve()
+//     })
+//   })
+// }
 
-function copyAll(files) {
-  return Promise.all(files.map(x => copy(x)))
-}
+// function copyAll(files) {
+//   return Promise.all(files.map(x => copy(x)))
+// }
