@@ -6,15 +6,18 @@ exports.handler = function(event, context, callback) {
         <meta charset="utf-8">
         <title>Hello, world</title>
         <style>
-        html, body {
+        html, body, iframe {
           height: 100%;
+          margin: 0;
         }
         iframe {
           width: 100%;
-          height: 100%;
           border: 0;
         }
         </style>
+        <script>
+        var foo = 'test from parent'
+        </script>
       </head>
       <body>
         <iframe src="${process.env.URL}"></iframe>
