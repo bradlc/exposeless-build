@@ -13,10 +13,19 @@ exports.handler = function(event, context, callback) {
         iframe {
           width: 100%;
           border: 0;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .ready iframe {
+          opacity: 1;
+          pointer-events: auto;
         }
         </style>
         <script>
         var foo = 'test from parent'
+        function ready() {
+          document.body.classList.add('ready')
+        }
         </script>
       </head>
       <body>
