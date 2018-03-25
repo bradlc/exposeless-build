@@ -9,13 +9,12 @@
     "gatsby-cli": "^1.1.45",
     "gatsby-link": "^1.6.39",
     "gatsby-plugin-react-helmet": "^2.0.7",
-    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
     "netlify-lambda": "^0.3.0",
-    "react-helmet": "^5.2.0"
+    "react-helmet": "^5.2.0",
+    "sequelize": "^4.37.4"
   },
-  "keywords": [
-    "gatsby"
-  ],
+  "keywords": ["gatsby"],
   "license": "MIT",
   "scripts": {
     "build": "npm run lambda:build && gatsby build",

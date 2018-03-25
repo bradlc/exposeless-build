@@ -1,20 +1,35 @@
 require('dotenv').config()
-const mysql = require('mysql')
-
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-})
+const Sequelize = require('sequelize')
 
 exports.handler = function(event, context, callback) {
+  const sequelize = new Sequelize(
+    process.env.MYSQL_DATABASE,
+    process.env.MYSQL_USER,
+    process.env.MYSQL_PASSWORD,
+    {
+      dialect: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: 9821,
+    }
+  )
+
+  const Editable = sequelize.define('editable', {
+    path: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
+    value: {
+      type: Sequelize.TEXT,
+    },
+  })
+
   const body = JSON.parse(event.body)
 
-  db.query(
-    'INSERT INTO netlifyeditables (path, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?',
-    [body.path, body.value, body.value],
-    (error, results, fields) => {
+  Editable.sync().then(() => {
+    Editable.upsert({
+      path: body.path,
+      value: body.value,
+    }).then(() => {
       callback(null, {
         statusCode: 200,
         headers: {
@@ -22,7 +37,6 @@ exports.handler = function(event, context, callback) {
         },
         body: JSON.stringify({ status: 'ok' }),
       })
-      db.end()
-    }
-  )
+    })
+  })
 }

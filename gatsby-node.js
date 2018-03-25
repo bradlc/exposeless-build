@@ -4,20 +4,39 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 require('dotenv').config()
-const mysql = require('mysql')
 const crypto = require('crypto')
+const Sequelize = require('sequelize')
 
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-})
+const sequelize = new Sequelize(
+  process.env.MYSQL_DATABASE,
+  process.env.MYSQL_USER,
+  process.env.MYSQL_PASSWORD,
+  {
+    dialect: 'mysql',
+    host: process.env.MYSQL_HOST,
+    port: 3306,
+  }
+)
+
+const Editable = sequelize.define(
+  'netlifyeditable',
+  {
+    path: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
+    value: {
+      type: Sequelize.TEXT,
+    },
+  },
+  { underscored: true }
+)
 
 exports.sourceNodes = async ({ boundActionCreators }) => {
   const { createNode } = boundActionCreators
 
-  const editables = await query(db, 'SELECT * FROM netlifyeditables')
+  await Editable.sync()
+  const editables = await Editable.findAll()
 
   editables
     .map(editable => ({
@@ -43,13 +62,4 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
 
   // We're done, return.
   return
-}
-
-function query(db, str) {
-  return new Promise((resolve, reject) => {
-    db.query(str, (error, results, fields) => {
-      if (error) return reject(error)
-      resolve(results)
-    })
-  })
 }
