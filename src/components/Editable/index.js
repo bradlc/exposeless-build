@@ -15,7 +15,7 @@ class Text extends Component {
       typeof window !== 'undefined' &&
       window.parent.editables &&
       window.parent.editables.filter(
-        x => x.path === `${this.context.pageName}!${this.props.name}`
+        x => x.path === `${this.context.pageName}!${this.props.name}!draft`
       )
 
     if (adminOverride && adminOverride.length > 0) {
