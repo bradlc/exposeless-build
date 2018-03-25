@@ -79,7 +79,7 @@ exports.handler = function(event, context, callback) {
           var editables = ${JSON.stringify(editables)};
 
           publish.addEventListener('click', function() {
-            window.fetch('https://api.netlify.com/build_hooks/5ab7b865efbe5d5ddc48f317', {
+            window.fetch('/.netlify/functions/publish', {
               method: 'post',
               headers: {
                 'content-type': 'application/json'

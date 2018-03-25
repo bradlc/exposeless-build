@@ -1,4 +1,5 @@
 require('dotenv').config()
+const request = require('request')
 const Sequelize = require('sequelize')
 
 exports.handler = function(event, context, callback) {
@@ -56,13 +57,19 @@ exports.handler = function(event, context, callback) {
           )
         )
         .then(() => {
-          callback(null, {
-            statusCode: 200,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: 'ok' }),
-          })
+          request.post(
+            'https://api.netlify.com/build_hooks/5ab7b865efbe5d5ddc48f317',
+            { json: {} },
+            () => {
+              callback(null, {
+                statusCode: 200,
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'ok' }),
+              })
+            }
+          )
         })
     })
 }

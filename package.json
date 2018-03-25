@@ -12,9 +12,12 @@
     "mysql2": "^1.5.3",
     "netlify-lambda": "^0.3.0",
     "react-helmet": "^5.2.0",
+    "request": "^2.85.0",
     "sequelize": "^4.37.4"
   },
-  "keywords": ["gatsby"],
+  "keywords": [
+    "gatsby"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "npm run lambda:build && gatsby build",
