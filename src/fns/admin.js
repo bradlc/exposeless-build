@@ -20,12 +20,34 @@ exports.handler = function(event, context, callback) {
           opacity: 1;
           pointer-events: auto;
         }
+        button {
+          position: fixed;
+          z-index: 100;
+          right: 20px;
+          bottom: 20px;
+        }
         </style>
+      </head>
+      <body>
+        <div data-netlify-identity-button>Login with Netlify Identity</div>
+        <iframe src="${process.env.URL}"></iframe>
+        <button type="button" id="publish">Publish</button>
+
         <script>
         var foo = 'test from parent'
         function ready() {
           document.body.classList.add('ready')
         }
+
+        publish.addEventListener('click', function() {
+          window.fetch('https://api.netlify.com/build_hooks/5ab7b865efbe5d5ddc48f317', {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: '{}'
+          })
+        });
         </script>
         <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
         <script>
@@ -36,10 +58,6 @@ exports.handler = function(event, context, callback) {
         netlifyIdentity.on("open", () => console.log("Widget opened"));
         netlifyIdentity.on("close", () => console.log("Widget closed"));
         </script>
-      </head>
-      <body>
-        <div data-netlify-identity-button>Login with Netlify Identity</div>
-        <iframe src="${process.env.URL}"></iframe>
       </body>
     </html>
   `
