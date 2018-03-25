@@ -4,6 +4,6 @@ exports.handler = function(event, context, callback) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(context.clientContext),
+    body: JSON.stringify(event),
   })
 }
