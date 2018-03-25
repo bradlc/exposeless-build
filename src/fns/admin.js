@@ -91,7 +91,16 @@ exports.handler = function(event, context, callback) {
           </script>
           <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
           <script>
-          netlifyIdentity.on("init", user => console.log('init', user));
+          netlifyIdentity.on("init", user => {
+            console.log('init', user)
+            window.fetch('/.netlify/git/github/contents/package.json', {
+              headers: {
+                Authorization: 'Bearer ' + user.token.access_token
+              }
+            }).then(res => {
+              console.log(res)
+            })
+          });
           netlifyIdentity.on("login", user => console.log('login', user));
           netlifyIdentity.on("logout", () => console.log("Logged out"));
           netlifyIdentity.on("error", err => console.error("Logged out"));
