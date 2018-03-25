@@ -28,6 +28,9 @@ exports.handler = function(event, context, callback) {
         }
         </script>
         <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+        <script>
+        console.log(netlifyIdentity.currentUser())
+        </script>
       </head>
       <body>
         <div data-netlify-identity-button>Login with Netlify Identity</div>
