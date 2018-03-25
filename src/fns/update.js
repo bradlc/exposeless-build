@@ -15,7 +15,6 @@ exports.handler = function(event, context, callback) {
     'INSERT INTO netlifyeditables (path, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?',
     [body.path, body.value, body.value],
     (error, results, fields) => {
-      db.end()
       callback(null, {
         statusCode: 200,
         headers: {
@@ -23,6 +22,7 @@ exports.handler = function(event, context, callback) {
         },
         body: JSON.stringify({ status: 'ok' }),
       })
+      db.end()
     }
   )
 }
