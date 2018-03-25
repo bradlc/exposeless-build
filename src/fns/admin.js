@@ -30,7 +30,7 @@ exports.handler = function(event, context, callback) {
 
   Editable.sync().then(() => {
     Editable.findAll({
-      order: ['path', 'ASC'],
+      order: [['path', 'ASC']],
     }).then(results => {
       const editables = {}
       results.forEach(result => {
