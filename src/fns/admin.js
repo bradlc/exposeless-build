@@ -30,12 +30,13 @@ exports.handler = function(event, context, callback) {
 
   Editable.sync().then(() => {
     Editable.findAll({
-      where: {
-        path: {
-          [Sequelize.Op.regexp]: '!draft$',
-        },
-      },
-    }).then(editables => {
+      order: ['path', 'ASC'],
+    }).then(results => {
+      const editables = {}
+      results.forEach(result => {
+        editables[result.path.replace(/!draft$/, '')] = result.value
+      })
+
       const html = `
       <!doctype html>
       <html lang="en">

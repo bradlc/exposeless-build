@@ -14,15 +14,7 @@ class Text extends Component {
     let adminOverride =
       typeof window !== 'undefined' &&
       window.parent.editables &&
-      window.parent.editables.filter(
-        x => x.path === `${this.context.pageName}!${this.props.name}!draft`
-      )
-
-    if (adminOverride && adminOverride.length > 0) {
-      adminOverride = adminOverride[0].value
-    } else {
-      adminOverride = null
-    }
+      window.parent.editables[`${this.context.pageName}!${this.props.name}`]
 
     return (
       <div
