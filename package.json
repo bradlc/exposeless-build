@@ -4,22 +4,27 @@
   "version": "1.0.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "dotenv": "^5.0.1",
     "gatsby": "^1.9.232",
     "gatsby-cli": "^1.1.45",
     "gatsby-link": "^1.6.39",
     "gatsby-plugin-react-helmet": "^2.0.7",
-    "mkdirp": "^0.5.1",
-    "ncp": "^2.0.0",
+    "mysql": "^2.15.0",
+    "netlify-lambda": "^0.3.0",
     "react-helmet": "^5.2.0"
   },
-  "keywords": ["gatsby"],
+  "keywords": [
+    "gatsby"
+  ],
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build",
+    "build": "npm run lambda:build && gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\"",
-    "postinstall": "zip -qr9 all.zip * && zip -qr9 pkg.zip all.zip build.js"
+    "lambda:serve": "netlify-lambda serve src/fns",
+    "lambda:build": "netlify-lambda build src/fns",
+    "pkg": "zip -qr9 all.zip * && zip -qr9 pkg.zip all.zip gatsby-lambda.js"
   },
   "devDependencies": {
     "prettier": "^1.11.1"

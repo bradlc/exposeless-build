@@ -11,7 +11,7 @@ provider:
 
 functions:
   build:
-    handler: build.build
+    handler: gatsby-lambda.build
 
 package:
   artifact: pkg.zip
