@@ -36,7 +36,13 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
   const { createNode } = boundActionCreators
 
   await Editable.sync()
-  const editables = await Editable.findAll()
+  const editables = await Editable.findAll({
+    where: {
+      path: {
+        [Sequelize.Op.notRegexp]: '!draft$',
+      },
+    },
+  })
 
   editables
     .map(editable => ({

@@ -33,7 +33,7 @@ exports.handler = function(event, context, callback) {
 
   Editable.sync().then(() => {
     Editable.upsert({
-      path: body.path,
+      path: `${body.path}!draft`,
       value: body.value,
     }).then(() => {
       callback(null, {
