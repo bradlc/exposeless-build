@@ -29,7 +29,12 @@ exports.handler = function(event, context, callback) {
         </script>
         <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
         <script>
-        console.log(netlifyIdentity.currentUser())
+        netlifyIdentity.on("init", user => console.log('init', user));
+        netlifyIdentity.on("login", user => console.log('login', user));
+        netlifyIdentity.on("logout", () => console.log("Logged out"));
+        netlifyIdentity.on("error", err => console.error("Logged out"));
+        netlifyIdentity.on("open", () => console.log("Widget opened"));
+        netlifyIdentity.on("close", () => console.log("Widget closed"));
         </script>
       </head>
       <body>
