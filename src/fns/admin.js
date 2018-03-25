@@ -27,8 +27,10 @@ exports.handler = function(event, context, callback) {
           document.body.classList.add('ready')
         }
         </script>
+        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
       </head>
       <body>
+        <div data-netlify-identity-button>Login with Netlify Identity</div>
         <iframe src="${process.env.URL}"></iframe>
       </body>
     </html>
