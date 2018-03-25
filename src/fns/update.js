@@ -9,19 +9,23 @@ exports.handler = function(event, context, callback) {
     {
       dialect: 'mysql',
       host: process.env.MYSQL_HOST,
-      port: 9821,
+      port: 3306,
     }
   )
 
-  const Editable = sequelize.define('editable', {
-    path: {
-      type: Sequelize.STRING,
-      unique: true,
+  const Editable = sequelize.define(
+    'netlifyeditable',
+    {
+      path: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      value: {
+        type: Sequelize.TEXT,
+      },
     },
-    value: {
-      type: Sequelize.TEXT,
-    },
-  })
+    { underscored: true }
+  )
 
   const body = JSON.parse(event.body)
 
