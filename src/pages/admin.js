@@ -33,18 +33,18 @@ export default class Admin extends React.Component {
             headers,
           }
         )
-        window
-          .fetch('https://fullmoviesonyt.com/.netlify/git/github/pulls', {
-            headers,
-          })
-          .then(res => res.json())
-          .then(res => {
-            this.setState({
-              pr: res.filter(
-                pull => pull.base.ref === 'master' && pull.head.ref === 'draft'
-              )[0],
-            })
-          })
+        // window
+        //   .fetch('https://fullmoviesonyt.com/.netlify/git/github/pulls', {
+        //     headers,
+        //   })
+        //   .then(res => res.json())
+        //   .then(res => {
+        //     this.setState({
+        //       pr: res.filter(
+        //         pull => pull.base.ref === 'master' && pull.head.ref === 'draft'
+        //       )[0],
+        //     })
+        //   })
         Promise.all([getMaster, getDraft])
           .then(([m, d]) => Promise.all([m.json(), d.json()]))
           .then(res => {
@@ -92,30 +92,75 @@ export default class Admin extends React.Component {
           }),
         }
       )
-      .then(res => res.text())
-      .then(res => console.log(res))
+      .then(res => res.json())
+      .then(res => this.setState({ draftSha: res.content.sha }))
   }
   publish() {
-    window
+    this.createPullRequest
+      .bind(this)()
+      .then(pr =>
+        window.fetch(
+          `https://fullmoviesonyt.com/.netlify/git/github/pulls/${
+            pr.number
+          }/merge`,
+          {
+            method: 'put',
+            headers: {
+              Authorization: 'Bearer ' + this.state.user.token.access_token,
+            },
+          }
+        )
+      )
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .then(this.cleanDraft.bind(this))
+      .then(res => console.log(res))
+  }
+  createPullRequest() {
+    return window
+      .fetch('https://fullmoviesonyt.com/.netlify/git/github/pulls', {
+        method: 'post',
+        headers: {
+          Authorization: 'Bearer ' + this.state.user.token.access_token,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: 'CMS',
+          base: 'master',
+          head: 'draft',
+        }),
+      })
+      .then(res => res.json())
+  }
+  cleanDraft() {
+    return window
       .fetch(
-        `https://fullmoviesonyt.com/.netlify/git/github/pulls/${
-          this.state.pr.number
-        }/merge`,
+        'https://fullmoviesonyt.com/.netlify/git/github/contents/data/editables.json',
         {
           method: 'put',
           headers: {
             Authorization: 'Bearer ' + this.state.user.token.access_token,
+            'content-type': 'application/json',
           },
+          body: JSON.stringify({
+            branch: 'draft',
+            sha: this.state.draftSha,
+            content: window.btoa('[]'),
+            message: 'post-publish',
+          }),
         }
       )
       .then(res => res.json())
-      .then(res => console.log(res))
+      .then(res => {
+        this.setState({ draftSha: res.content.sha })
+        return res
+      })
   }
   render() {
     return (
       <div>
         <button onClick={() => netlifyIdentity.open()}>login</button>
-        <button onClick={this.publish.bind(this)}>Publish</button>
+        <button onClick={() => this.publish()}>Publish</button>
         {typeof window !== 'undefined' &&
           this.state.ready && (
             <iframe src={window.location.origin} style={this.state.style} />
