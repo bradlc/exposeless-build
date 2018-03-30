@@ -8,13 +8,17 @@ class Text extends Component {
 
   render() {
     const value = this.context.editables.filter(x => {
-      return x.node.path === `${this.context.pageName}!${this.props.name}`
+      return (
+        x.node.page === this.context.pageName && x.node.name === this.props.name
+      )
     })[0]
 
     let adminOverride =
       typeof window !== 'undefined' &&
       window.parent.editables &&
-      window.parent.editables[this.context.pageName][this.props.name]
+      window.parent.editables.filter(
+        x => x.page === this.context.pageName && x.name === this.props.name
+      )[0]
 
     return (
       <div
@@ -38,7 +42,7 @@ class Text extends Component {
             })
         }}
       >
-        {adminOverride ||
+        {(adminOverride && adminOverride.value) ||
           (value && value.node.value) ||
           this.props.initial ||
           'Lorem ipsum'}

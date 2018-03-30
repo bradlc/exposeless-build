@@ -1,5 +1,7 @@
-{
-  "home": {
-    "test": "draft world edit hello"
+[
+  {
+    "page": "home",
+    "name": "test",
+    "value": "draft world edit hello"
   }
-}
+]

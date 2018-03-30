@@ -1,6 +1,5 @@
 import React from 'react'
 import netlifyIdentity from 'netlify-identity-widget'
-import merge from 'deepmerge'
 
 export default class Admin extends React.Component {
   constructor(props) {
@@ -79,7 +78,9 @@ export default class Admin extends React.Component {
             sha: this.state.draftSha,
             content: window.btoa(
               JSON.stringify(
-                merge(window.draft, { [e.page]: { [e.name]: e.value } }),
+                merge(window.draft, [
+                  { page: e.page, name: e.name, value: e.value },
+                ]),
                 null,
                 2
               )
@@ -119,4 +120,24 @@ export default class Admin extends React.Component {
       </div>
     )
   }
+}
+
+function merge(master, draft) {
+  const result = master.slice(0)
+  draft.forEach(a => {
+    let index = -1
+    master.some((b, i) => {
+      if (b.page === a.page && b.name === a.name) {
+        index = i
+        return true
+      }
+      return false
+    })
+    if (index !== -1) {
+      result[index].value = a.value
+    } else {
+      result.push(a)
+    }
+  })
+  return result
 }
