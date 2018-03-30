@@ -36,12 +36,14 @@ class Text extends Component {
       window.parent.editables
     ) {
       require.ensure(
-        ['draft-js', 'draft-js-import-html'],
+        ['draft-js', 'draft-js-import-html', 'draft-js-export-html'],
         () => {
           const draftjs = require('draft-js')
           const importHtml = require('draft-js-import-html')
+          this.exportHtml = require('draft-js-export-html').stateToHTML
 
           this.Editor = draftjs.Editor
+          this.RichUtils = draftjs.RichUtils
           let contentState = importHtml.stateFromHTML(this.state.value)
           this.setState({
             editorState: draftjs.EditorState.createWithContent(contentState),
@@ -70,15 +72,38 @@ class Text extends Component {
   //   // this.state = { editorState: EditorState.createWithContent(contentState) }
   //   // this.onChange = editorState => this.setState({ editorState })
   // }
+  headingOne() {
+    this.onChange(
+      this.RichUtils.toggleBlockType(this.state.editorState, 'header-one')
+    )
+  }
+
+  getHtml() {
+    console.log(this.exportHtml(this.state.editorState.getCurrentContent()))
+  }
+
+  save() {
+    window.parent &&
+      window.parent.save({
+        page: this.context.pageName,
+        name: this.props.name,
+        value: this.exportHtml(this.state.editorState.getCurrentContent()),
+      })
+  }
 
   render() {
     return this.state.editorState ? (
-      <this.Editor
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-      />
+      <div>
+        <this.Editor
+          editorState={this.state.editorState}
+          onChange={this.onChange}
+          onBlur={() => this.save()}
+        />
+        <button onClick={() => this.headingOne()}>h1</button>
+        <button onMouseDown={() => this.getHtml()}>tohtml</button>
+      </div>
     ) : (
-      <div>{this.state.value}</div>
+      <div dangerouslySetInnerHTML={{ __html: this.state.value }} />
     )
 
     // return (
