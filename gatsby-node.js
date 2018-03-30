@@ -6,8 +6,8 @@
 // require('dotenv').config()
 // const crypto = require('crypto')
 // const Sequelize = require('sequelize')
-const fs = require('fs')
-const path = require('path')
+// const fs = require('fs')
+// const path = require('path')
 // const sequelize = new Sequelize(
 //   process.env.MYSQL_DATABASE,
 //   process.env.MYSQL_USER,
@@ -82,3 +82,18 @@ const path = require('path')
 //   // We're done, return.
 //   return
 // }
+
+exports.onCreatePage = async ({ page, boundActionCreators }) => {
+  const { createPage } = boundActionCreators
+
+  return new Promise((resolve, reject) => {
+    if (page.path.match(/^\/admin/)) {
+      page.layout = 'admin'
+
+      // Update the page.
+      createPage(page)
+    }
+
+    resolve()
+  })
+}

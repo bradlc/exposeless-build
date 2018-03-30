@@ -159,11 +159,21 @@ export default class Admin extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={() => netlifyIdentity.open()}>login</button>
-        <button onClick={() => this.publish()}>Publish</button>
+        <div style={{ position: 'absolute', bottom: 20, right: 20 }}>
+          <button onClick={() => netlifyIdentity.open()}>login</button>
+          <button onClick={() => this.publish()}>Publish</button>
+        </div>
         {typeof window !== 'undefined' &&
           this.state.ready && (
-            <iframe src={window.location.origin} style={this.state.style} />
+            <iframe
+              src={window.location.origin}
+              style={{
+                height: '100vh',
+                border: 0,
+                margin: 0,
+                ...this.state.style,
+              }}
+            />
           )}
       </div>
     )
