@@ -8,31 +8,41 @@ class Text extends Component {
 
   render() {
     const value = this.context.editables.filter(x => {
-      return x.node.path === `${this.context.pageName}!${this.props.name}`
+      return (
+        x.node.page === this.context.pageName && x.node.name === this.props.name
+      )
     })[0]
 
     let adminOverride =
       typeof window !== 'undefined' &&
       window.parent.editables &&
-      window.parent.editables[`${this.context.pageName}!${this.props.name}`]
+      window.parent.editables.filter(
+        x => x.page === this.context.pageName && x.name === this.props.name
+      )[0]
 
     return (
       <div
         contentEditable
         onBlur={e => {
-          window.fetch('/.netlify/functions/update', {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              path: `${this.context.pageName}!${this.props.name}`,
+          // window.fetch('/.netlify/functions/update', {
+          //   method: 'post',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify({
+          //     path: `${this.context.pageName}!${this.props.name}`,
+          //     value: e.target.textContent,
+          //   }),
+          // })
+          window.parent &&
+            window.parent.save({
+              page: this.context.pageName,
+              name: this.props.name,
               value: e.target.textContent,
-            }),
-          })
+            })
         }}
       >
-        {adminOverride ||
+        {(adminOverride && adminOverride.value) ||
           (value && value.node.value) ||
           this.props.initial ||
           'Lorem ipsum'}

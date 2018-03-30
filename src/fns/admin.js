@@ -93,19 +93,21 @@ exports.handler = function(event, context, callback) {
           <script>
           netlifyIdentity.on("init", user => {
             console.log('init', user)
-            const master = window.fetch('/.netlify/git/github/contents/package.json', {
-              headers: {
-                Authorization: 'Bearer ' + user.token.access_token
-              }
-            })
-            const draft = window.fetch('/.netlify/git/github/contents/package.json?ref=draft', {
-              headers: {
-                Authorization: 'Bearer ' + user.token.access_token
-              }
-            })
-            Promise.all([master, draft]).then(([m, d]) => Promise.all([m.json(), d.json()])).then(res => {
-              console.log(window.atob(res[0].content))
-              console.log(window.atob(res[1].content))
+            user.jwt().then(() => {
+              const master = window.fetch('/.netlify/git/github/contents/data/editables.json', {
+                headers: {
+                  Authorization: 'Bearer ' + user.token.access_token
+                }
+              })
+              const draft = window.fetch('/.netlify/git/github/contents/data/editables.json?ref=draft', {
+                headers: {
+                  Authorization: 'Bearer ' + user.token.access_token
+                }
+              })
+              Promise.all([master, draft]).then(([m, d]) => Promise.all([m.json(), d.json()])).then(res => {
+                console.log(window.atob(res[0].content))
+                console.log(window.atob(res[1].content))
+              })
             })
           });
           netlifyIdentity.on("login", user => console.log('login', user));

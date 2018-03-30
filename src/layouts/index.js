@@ -7,7 +7,8 @@ import './index.css'
 
 class TemplateWrapper extends React.Component {
   getChildContext() {
-    return { editables: this.props.data.allEditable.edges }
+    console.log(this.props.data.allEditablesJson.edges)
+    return { editables: this.props.data.allEditablesJson.edges }
   }
   render() {
     return (
@@ -45,11 +46,11 @@ TemplateWrapper.childContextTypes = {
 
 export const query = graphql`
   query EditablesQuery {
-    allEditable {
+    allEditablesJson {
       edges {
         node {
-          id
-          path
+          page
+          name
           value
         }
       }
