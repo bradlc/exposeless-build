@@ -12,7 +12,9 @@ export default class Admin extends React.Component {
     return (
       <div>
         <button onClick={() => netlifyIdentity.open()}>login</button>
-        <iframe src={window.location.origin} />
+        {typeof window !== 'undefined' && (
+          <iframe src={window.location.origin} />
+        )}
       </div>
     )
   }
