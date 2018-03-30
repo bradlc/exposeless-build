@@ -14,22 +14,28 @@ class Text extends Component {
     let adminOverride =
       typeof window !== 'undefined' &&
       window.parent.editables &&
-      window.parent.editables[`${this.context.pageName}!${this.props.name}`]
+      window.parent.editables[this.context.pageName][this.props.name]
 
     return (
       <div
         contentEditable
         onBlur={e => {
-          window.fetch('/.netlify/functions/update', {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              path: `${this.context.pageName}!${this.props.name}`,
+          // window.fetch('/.netlify/functions/update', {
+          //   method: 'post',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify({
+          //     path: `${this.context.pageName}!${this.props.name}`,
+          //     value: e.target.textContent,
+          //   }),
+          // })
+          window.parent &&
+            window.parent.save({
+              page: this.context.pageName,
+              name: this.props.name,
               value: e.target.textContent,
-            }),
-          })
+            })
         }}
       >
         {adminOverride ||

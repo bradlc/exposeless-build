@@ -6,9 +6,9 @@ import Header from '../components/Header'
 import './index.css'
 
 class TemplateWrapper extends React.Component {
-  getChildContext() {
-    return { editables: this.props.data.allEditable.edges }
-  }
+  // getChildContext() {
+  //   return { editables: this.props.data.allEditable.edges }
+  // }
   render() {
     return (
       <div>
@@ -43,18 +43,18 @@ TemplateWrapper.childContextTypes = {
   editables: PropTypes.array,
 }
 
-export const query = graphql`
-  query EditablesQuery {
-    allEditable {
-      edges {
-        node {
-          id
-          path
-          value
-        }
-      }
-    }
-  }
-`
+// export const query = graphql`
+//   query EditablesQuery {
+//     allEditable {
+//       edges {
+//         node {
+//           id
+//           path
+//           value
+//         }
+//       }
+//     }
+//   }
+// `
 
 export default TemplateWrapper
