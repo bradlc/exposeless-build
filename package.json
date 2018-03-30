@@ -6,6 +6,8 @@
   "dependencies": {
     "deepmerge": "^2.1.0",
     "dotenv": "^5.0.1",
+    "draft-js": "^0.10.5",
+    "draft-js-import-html": "^1.2.1",
     "gatsby": "^1.9.232",
     "gatsby-cli": "^1.1.45",
     "gatsby-link": "^1.6.39",
