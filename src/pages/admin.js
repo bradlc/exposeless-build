@@ -4,6 +4,7 @@ import netlifyIdentity from 'netlify-identity-widget'
 export default class Admin extends React.Component {
   constructor(props) {
     super(props)
+    netlifyIdentity.init()
     netlifyIdentity.on('init', user => {
       console.log(user)
     })
