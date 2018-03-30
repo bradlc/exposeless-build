@@ -9,27 +9,6 @@ class Text extends Component {
   }
 
   componentDidMount() {
-    let value = this.context.editables.filter(x => {
-      return (
-        x.node.page === this.context.pageName && x.node.name === this.props.name
-      )
-    })[0]
-
-    let adminOverride =
-      typeof window !== 'undefined' &&
-      window.parent.editables &&
-      window.parent.editables.filter(
-        x => x.page === this.context.pageName && x.name === this.props.name
-      )[0]
-
-    value =
-      (adminOverride && adminOverride.value) ||
-      (value && value.node.value) ||
-      this.props.initial ||
-      'Lorem ipsum'
-
-    this.setState({ value })
-
     if (
       typeof window !== 'undefined' &&
       window.parent &&
@@ -44,7 +23,7 @@ class Text extends Component {
 
           this.Editor = draftjs.Editor
           this.RichUtils = draftjs.RichUtils
-          let contentState = importHtml.stateFromHTML(this.state.value)
+          let contentState = importHtml.stateFromHTML(this.value)
           this.setState({
             editorState: draftjs.EditorState.createWithContent(contentState),
           })
@@ -92,6 +71,28 @@ class Text extends Component {
   }
 
   render() {
+    if (!this.value) {
+      const value = this.context.editables.filter(x => {
+        return (
+          x.node.page === this.context.pageName &&
+          x.node.name === this.props.name
+        )
+      })[0]
+
+      let adminOverride =
+        typeof window !== 'undefined' &&
+        window.parent.editables &&
+        window.parent.editables.filter(
+          x => x.page === this.context.pageName && x.name === this.props.name
+        )[0]
+
+      this.value =
+        (adminOverride && adminOverride.value) ||
+        (value && value.node.value) ||
+        this.props.initial ||
+        'Lorem ipsum'
+    }
+
     return this.state.editorState ? (
       <div>
         <this.Editor
@@ -103,7 +104,7 @@ class Text extends Component {
         <button onMouseDown={() => this.getHtml()}>tohtml</button>
       </div>
     ) : (
-      <div dangerouslySetInnerHTML={{ __html: this.state.value }} />
+      <div dangerouslySetInnerHTML={{ __html: this.value }} />
     )
 
     // return (
