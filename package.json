@@ -8,6 +8,7 @@
     "gatsby": "^1.9.232",
     "gatsby-cli": "^1.1.45",
     "gatsby-link": "^1.6.39",
+    "gatsby-plugin-preact": "^1.0.17",
     "gatsby-plugin-react-helmet": "^2.0.7",
     "mysql2": "^1.5.3",
     "netlify-lambda": "^0.3.0",
