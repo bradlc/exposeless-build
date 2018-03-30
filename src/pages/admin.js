@@ -10,7 +10,10 @@ export default class Admin extends React.Component {
         pointerEvents: 'none',
       },
     }
+  }
+  componentDidMount() {
     netlifyIdentity.on('init', user => {
+      if (!user) return
       console.log('init', user)
       this.setState({ user })
 
